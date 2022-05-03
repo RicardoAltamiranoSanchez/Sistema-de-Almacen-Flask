@@ -1,0 +1,27 @@
+
+{% extends 'layout/base.html'%}
+<!-- importamos nuestra plantilla base con extends y el block con el nombre contenido donde pondremos nuestro contenido el nombre es -->
+<!--el modulo es el blueprint a que indicamos ese el modulo de la funcion-->
+{% block contenido%}
+<a class="btn btn-primary btn-ms" href="{{url_for('categoria.Inicio')}}">Regresar</a>
+<br/>
+<form action="{{url_for('categoria.Crear')}}" method='POST'>
+<!--usamos wtform para hacer el formjlario nombre es el nombre que de dimos label es la etiquetea sin ella es un input-->
+{% include 'layout/_formularioCategoria.html' %}
+<!--include es diferente a extendes include incñuye el codigo que tenemos ahi como un bloque de codigo-->
+
+<input  class="btn btn-success" type="submit" value="Enviar"> 
+
+</form>
+<!--
+<label for="nombre" >Nombre</label>
+<input type="text" name="nombre" id="nombre">
+<label for="precio" >Precio</label>
+<input type="text" name="precio" id="precio">
+
+-->
+
+
+
+
+{%endblock%}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Show</title>
+</head>
+<body>
+    
+<h1>{{producto['name']}}</h1>
+<p>{{producto['category']}}</p>
+<!--el | es para indicar si no existe que ponga este es un or y el default es ul filtro ponemos lo que queremos que diga -->
+<!--y el True es para indicar que este activo por defectoe esta el False-->
+<p>Filtro:{{producto['price'] | default("sin precio papu",True)}}</p>
+<!--es pra convertir el codigo dentro de unos corchetes en html con safe lo convierte-->
+<p>{{ "<h1>Hola mundo </h1>" | safe}}</p>
+<!--truncate no sirve para cortar el texto los tres ultimos caracteres se pone 3 puntos ...- y ponemos hasta que carcater va mostrar-->
+<p>{{ "Esto continuara" | truncate(6)}}</p>
+<!--count es solo para contar caracteres-->
+<p>{{ "Hola mundo " | count}}</p>
+<!--con flota convertimos un texto o un entero a flotante-->
+<p>{{ "60",80 | float}}</p>
+<!--con int convertimos un texto o un entero a entero-->
+<p>{{ "60.0 ",80.0 | int}}</p>
+<!--con round redondeamos el numero y ponemos hasta que numero queremos rendondear -->
+<p>{{ 80.15467 | round(1)}}</p>
+<!--con join es para poder convertir un arreglo en texto yponemos como lo vamos a separ entre ellos(",") -->
+<p>{{ ["riki","balboa"] | join(", ")}}</p>
+<!--length no dice cuantos elementos hay en el arreglo -->
+<p>{{ ["riki","balboa"] | length}}</p>
+<!--con tojson convertimos un objeto en un json -->
+<p> {{{ "nombre":"Ricard","Edad":25,"Hombre":True} | tojson}}</p>
+<!--filtro creado desde app.py productos pasamos el objeto de producto al filtro que creamos local-->
+<p>Filtro:{{producto | iva}}</p>
+<!--filtro creado desde la raiz global pasamos un valor de int y que nos devuelva el doble-->
+<p>Filtro:{{40 | doble}}</p>
+</body>
+</html>

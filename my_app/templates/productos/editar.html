@@ -1,0 +1,25 @@
+
+{% extends 'layout/base.html'%}
+<!-- importamos nuestra plantilla base con extends y el block con el nombre contenido donde pondremos nuestro contenido el nombre es -->
+<!--el modulo es el blueprint a que indicamos ese el modulo de la funcion-->
+{% block contenido%}
+<!--creamos la pagina y usamos la funcon de Actualizar con el modulo de donde esta que es el producto pero no usamoa la ruta d esta solo la funcion y su codigo para poder actualizar el elemento en la base deda tos-->
+<a class="btn btn-primary btn-ms" href="{{url_for('producto.Inicio')}}">Regresar</a>
+<br/>
+
+<form action="{{url_for('producto.Actualizar',id=producto.id)}}" method='POST'>
+{% include 'layout/_formulario.html' %}
+<input type="submit"  class="btn btn-success" value="Actualizar"> 
+</form>
+
+
+
+<!--
+    
+<label for="nombre" >Nombre</label>
+<input type="text" name="nombre" id="nombre" value="{{producto.nombre}}">
+<label for="precio" >Precio</label>
+<input type="text" name="precio" id="precio" value="{{producto.precio}}">
+
+-->
+{%endblock%}

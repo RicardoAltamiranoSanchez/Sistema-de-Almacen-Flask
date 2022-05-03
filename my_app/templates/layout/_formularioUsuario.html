@@ -1,0 +1,7 @@
+<!--el _formulario es para indicar que solo usaremos el codigo no la vista-->
+<!--ponemos parentesis para poner clases dentro delinput o etiqueta() lo hacemos como si fuera una funcion-->
+
+{{formulario.nombreUsuario.label}}{{formulario.nombreUsuario(class="form-control mb-3")}}
+{{formulario.password.label}}{{formulario.password(class="form-control mb-3")}}
+<!-- hacemos un elemento escondido para proteger la ruta es para que no reenvie a otra parte y vea que esta enla ruta -->
+{{formulario.nextLogin()}}

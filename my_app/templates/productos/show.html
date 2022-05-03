@@ -1,0 +1,16 @@
+
+{% extends 'layout/base.html'%}
+<!-- importamos nuestra plantilla base con extends y el block con el nombre contenido donde pondremos nuestro contenido-->
+{% block contenido%}
+<body>
+        <h1>{{producto['id']}}</h1>
+        <p>{{producto['nombre']}}</p>
+        <p>{{producto['precio']}}</p>         
+{% if producto['precio'] >= 100 %}
+        <h5>Precio Alto</h5>
+{%else%}
+<h5>Precio Bajo</h5>
+{%endif%}        
+</body>
+
+{%endblock%}

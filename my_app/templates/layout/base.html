@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Desde la base html</title>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='bootstrap/css/bootstrap.min.css') }}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+   <link rel="stylesheet" href="{{url_for('static' ,filename='style.css')}}">
+   <link rel="stylesheet" href="{{url_for('static' ,filename='fontawesome/css/all.min.css')}}">
+   
+
+  </head>
+<body>
+    <!--documentacion de templates o bloques para la base https://jinja.palletsprojects.com/en/2.10.x/templates/-->
+  {% include "layout/_navegacion.html" %}
+
+
+<!--para mostrar los mensajes de flash un codigo solo nos importa aqui el get_flashed_messages los dema es codigo para mostrarlo en la vista-->
+{%with mensajes=get_flashed_messages()%}
+{% if mensajes %}
+<ul class=flashes>
+{% for m in mensajes %}
+<li>{{m}}</li>
+{%endfor%}
+</ul>
+{%endif%}
+{%endwith%}
+<!--hacemos el html base ya que todos los demas lo van a heredar muy bien papu y añadimos un bloque donde pondremos el contenido que van a usar las demas platillas-->
+{%block contenido%}
+{%endblock%}    
+
+
+
+{% include 'layout/_footer.html' %}
+
+<script src="{{ url_for('static',filename='global/js/jquery-3.4.1.slim.min.js') }}"></script>
+<script src="{{ url_for('static',filename='global/js/popper.min.js') }}"></script>
+<script src="{{ url_for('static',filename='bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="{{url_for('static' ,filename='main.js')}}"></script>
+
+</body>
+</html>

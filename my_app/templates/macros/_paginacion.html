@@ -1,0 +1,38 @@
+<!--Aqui hacemos las macros las macro son bloques de codigo como un Mideware o son funcciones se importan como funciones-->
+<!--De ponemos el nombre y el parametro que va recibir-->
+{% macro macro_paginacion(paginacion) %}
+<!--codigo para empaginado de la pagina-->
+<nav aria-label="Page navigation example">
+
+    <ul class="pagination">
+        <!--indicamos si existe uno anterios o con el has_prev que nos ponga el boton de antes con y nos redirija con pre_num al anterio-->
+        {% if  paginacion.has_prev %}
+        <li class="page-item"> <a class="page-link"
+                href="{{ url_for('producto.Inicio', page=paginacion.prev_num)}}">&laquo;</a></li>
+        {%endif %}
+
+        {%- for page in paginacion.iter_pages() %}
+        {% if page !=paginacion.page %}
+        <li class="page-item"> <a class="page-link" href="{{ url_for('producto.Inicio', page=page)}}">{{pagina}}</a>
+        </li>
+        {% else %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">{{page}}</a>
+        </li>
+
+
+        {%endif%}
+        {%- endfor %}
+        <!--indicamos si existe uno anterios o hay mas adelante o con el has_prev que nos ponga el boton de antes con y nos redirija con next_num al siguiente-->
+        {% if  paginacion.has_next %}
+        <li class="page-item"> <a class="page-link"
+                href="{{ url_for('producto.Inicio', page=paginacion.next_num)}}">&raquo;</a></li>
+        {%endif %}
+
+    </ul>
+</nav>
+
+
+{%-endmacro%}
+<!--lo cerramos con el guion y la con -end-->
+<!--Documentacion de flask para paginacion https://flask-sqlalchemy.palletsprojects.com/en/2.x/api/-->

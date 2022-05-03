@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Flask</a>
+      <div class="collapse navbar-collapse mb-3" id="navbarScroll">
+        
+   <!--los if de sessionlo hacemos para verificar si el susuario ya esta autenticado si no 
+     para que no muetre los demas elementos solo el de login o registar 
+          {%if session['nombre']%} {%endif%}-->
+          {% if current_user.nombre %}<!--Usando flask_login autenticacion  metedo es current solo verifiamos is eta autenticado-->
+          <ul class="navbar-nav  ">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{url_for('Fusuario.CerrarSession')}}">CerrarSesion</a>
+            </li>
+           {%else%}
+           <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('Fusuario.Login')}}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('Fusuario.RegistroUsuario')}}">Registrar</a>
+          </li>
+                                         
+          </ul>
+          {%endif%}
+
+
+
+         <!-- {%if session['nombre']%} {%endif%}-->
+          {% if current_user.nombre %}<!--Usando flask_login autenticacion  metedo es current solo verifiamos is eta autenticado-->
+         
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('producto.Inicio')}}">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('producto.Crear')}}">Producto</a>
+          </li>
+         
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{url_for('categoria.Inicio')}}">Categorias</a>
+          </li>                                     
+        </ul>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {%endif%}
+   
+
+   
+
+
+      </div>
+    </div>
+  </nav>

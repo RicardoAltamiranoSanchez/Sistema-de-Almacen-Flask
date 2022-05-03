@@ -1,0 +1,83 @@
+{% extends 'layout/base.html'%}
+<!-- importamos nuestra plantilla base con extends y el block con el nombre contenido donde pondremos nuestro contenido-->
+<!--Importamos nuestra macro como si fuera un modulo-->
+{% from 'macros/_paginacion.html' import macro_paginacion %}
+{% block contenido%}
+<a class="btn btn-primary btn-ms" href="{{url_for('categoria.Crear')}}">Crear</a>
+
+<br>
+
+  <!--hicimo un for de pusimos la key para indicar la llave que vamos iteras y los items() para que nos muesre todo-->
+  <!--loop accedemos ala variable cuando implementamos un for-->   
+  {% for categoria in categorias.items  %}
+  <!--usamos el  loop para indicar que nos añada un clase alos elementos que son impar con odd y que son par con even-->
+  <div class="card {{loop.cycle('odd','even')}}">
+  <div class="card-body jumbotron pb-2 pt-3 pr-5">
+  <!--las varibales se pone con doble  y mostramos el categoria y el atributo de nombre-->
+  <!--lo redirigimos con url_for el categoria es el nombre del blueprint y la funcion de ese bluenprin-->
+  <!--y lo mandmos con el id de la llave que es la key del diccionario-->
+     <h4> <a href="{{url_for('categoria.Detalle',id=categoria['id'])}}">{{categoria['nombre']}}</a> </h4>
+<!--un for con un if adentro se pude hacer dos condicionales enun mismo bloque ejemplo-->
+    <a class="btn btn-success btn-ms" href="{{url_for('categoria.Actualizar', id=categoria['id'])}}"><i data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" class="fa-solid fa-pen-to-square"></i></a>
+<!--Eliminamos el categoria-->
+    <button  data-bs-name="{{categoria['nombre']}}" data-bs-id="{{categoria['id']}}" data-bs-toggle="modal" data-bs-target="#EliminarModal"class="btn btn-danger btn-ms" ><i data-bs-toggle="tooltip" data-bs-placement="top" title=""   class="fa-solid fa-trash"></i></button>
+<!--loop es un metodo de python para itera en un ciclo for tiene varios metodos en este caso solo nos muestra la pocision empezando dedsde el uno-->
+     {{loop.index}}
+      
+  </div>
+</div>
+
+     {%endfor%}
+
+<!--mandamos a llamar nuestra funcion y de pasamos los parametros que de categorias ya que enviamos esta variable desde app en sus valorde de render-->
+{{macro_paginacion(categorias)  }}
+
+<!--Codigo para modal-->
+<div class="modal fade" id="#EliminarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Borrar <span></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+       ¿Seguro que lo quieres eliminar?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <a href ="#" id="BorrarProducto" class="btn btn-primary">Borrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+  window.onload=function(){
+
+    var Modal = document.getElementById('EliminarModal')
+      Modal.addEventListener('show.bs.modal', function (event) {
+  // Button that triggered the modal
+  var button = event.relatedTarget
+  // Extract info from data-bs-* attributes
+  var nombre = button.getAttribute('data-bs-nombre')
+  var id = button.getAttribute('data-bs-id')
+  // If necessary, you could initiate an AJAX request here
+  // and then do the updating in a callback.
+  //
+  // Update the modal's content.
+  Modal = querySelector('.modal-title span').innerHtml=nombre
+  Modal = querySelector('#BorrarProducto').setAttribute('href','/eliminar-categoria/'+id)
+ 
+})
+  }
+
+
+
+
+  
+  
+  
+  
+  
+  </script>
+
+{%endblock%}
