@@ -10,4 +10,4 @@ class DesarrolloConfig(BaseConfig):
     'Desarrollo configuracion'
     DEBUG = True
     TESTING = True
-    SECRET_KEY = 'Desarrollo key'
+    SECRET_KEY = 'Desarrollo key'#llave secreta para el token

@@ -1,13 +1,29 @@
 from flask import Flask,redirect,url_for
+#para proteccion de csfr
+from flask_wtf.csrf import CSRFProtect
 #para usar el flask login
 from flask_login import LoginManager,current_user,logout_user
 # para usar los decoradores y crear nuestro propios decoradores  es propio de python
 from functools import wraps
+import os #Es para utilizar los paths en python 
 #utilizamos el blueprint 
 #primero hacemos la configuracion de la base de datos para que no halla conflicto despues
 #despues importamos la vista  y por el ultiom el blueprint para que no halla confilicto enla creacion 
 #primero creamos la app flask 
 app=Flask(__name__)
+#Hacemos la proteccion de csrf metemos nuestra app al metedo de CSRFProtect
+#Es para el toke de seguridad se inserta el token en los formularios que estes utilizando
+#se genera el token con la llave secreta que tenemos en la configuracion.py
+CSRFProtect(app)
+#hacemos una lista para los tipos de archivos puedan subir
+#Set es uno de los 4 tipos de datos incorporados en Python utilizados para almacenar colecciones 
+#de datos, los otros 3 son List, Tuple y Dictionary, todos con diferentes calidades y uso.
+Lista_Archivos=set(['png','jpg','jpeg','gif','pdf'])
+#Creamos el path hacemos nuestra propia configuracion para el path de ponemos el nombre que queremos
+#el punto nos indica en que ruta estamos osea en el init__.py y lo contatenamos con la ruta de la carpeta
+#despues la importamos para utilizarla despues en una funcion productos
+app.config['Subir_Archivos']=os.path.realpath('.')+'/my_app/static/uploads/'
+
 #creamos el decorador antes de la vista 
 #Creamos un decorador para que solo el usuario adminstrador pueda entrar
 def Rol_Admin(f):
@@ -15,10 +31,12 @@ def Rol_Admin(f):
     def decorated_function(*args, **kwargs):
     #Si es diferente o no es adminstrador cerramos session y lo redirigimos al Fusuario.login al login
     #current_user.rol.value es la funcion que hicimos en la autenticacion y obtenemos elvalor del usuario cuando entra en el login    
-        if current_user.rol.value !="administrador":
-              #para cerrar la senccion en  metodo de flask_login
-           logout_user()
-           return redirect(url_for('Fusuario.Login'))
+        #Lo comente por que no me agarraba el usuario administrador verficar que pedo aqui mas adelante
+        # if current_user.rol.value !="adminstrador":
+        #       #para cerrar la senccion en  metodo de flask_login
+        #    print(current_user.rol.value)
+        #    logout_user()
+        #    return redirect(url_for('Fusuario.Login'))
             
         # if g.user is None:
         #     return redirect(url_for('login', next=request.url))
@@ -46,6 +64,9 @@ from my_app.productos.categorias import categoria
 from my_app.fautentication.FUsuario import Fusuario
 #Importamos flask ya que despues de aqui lo vamos a importar a los demas archivo no olcidar
 #utilizamos blueprint debemos registrar la vista de pasamos en nombre del archivo o vista
+#solo importamos el archivo de errores error_handler directamente sin usar blueprint()
+import my_app.generales.error_handler
+
 
 #Documnetacion de para usar el falsk login
 #https://flask-login.readthedocs.io/en/latest/
@@ -61,3 +82,4 @@ db.create_all()
 def doble_filter(n:int):
     return n*2
 # documentacion para decoradores https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
+#documentacion para de csfr y proteccion en flask https://flask-wtf.readthedocs.io/en/v0.14.2/csrf/

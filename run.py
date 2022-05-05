@@ -19,3 +19,4 @@ app.run()
 #para exportar las librerias que tenemos en el proyecto pip freeze > requerimientos.txt
 #documentacion de de consultas de base de datos https://docs.sqlalchemy.org/en/13/orm/query.html https://flask-sqlalchemy.palletsprojects.com/en/2.x/api/
 #Libreria para instalar en formulario  y hacer uso de ello pip install Flask-WTF
+#documentacion para entornos virtuales https://virtualenv.pypa.io/en/latest/

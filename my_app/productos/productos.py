@@ -12,7 +12,9 @@ from my_app.DB.database import db
 from sqlalchemy.sql.expression import not_,or_ #importamos elnot y el or
 from my_app.models.modelProducto.productos import FormularioProducto
 from flask_login import  login_user,logout_user,current_user,login_required
-from my_app import Rol_Admin
+from my_app import Rol_Admin,Lista_Archivos,app
+from werkzeug.utils import secure_filename#Espara segurida de archivos
+import os
 producto=Blueprint('producto',__name__)#pasamos el nombre de la aplicacion en el __name__ el primer parametro es como lo vamos a importar como asiganrla el nombre a un variable
 #el before reques es para que haga primero esto antes que lo demas
 #y verifica si esta authenticado el usuario para entrar ala plantilla con login_required()
@@ -22,6 +24,13 @@ producto=Blueprint('producto',__name__)#pasamos el nombre de la aplicacion en el
 @Rol_Admin
 def Construtor():
     pass
+def VerificacionExtensions(archivo):
+    #indicamos si existe el punto en el archivo  
+    #Despues con el and con lower le ponemos todo en minuscula
+    #y rsplit nos separa la extension del archivo donde encuentre un punto 
+    #y lo tomamos el valor [1] osea la extension y lo comparamos en la Lista_Archivos si son iguales
+    return '.' in archivo and archivo.lower().rsplit('.')[1] in Lista_Archivos
+
 
 @producto.route('/')
 @producto.route('/Index')
@@ -31,11 +40,21 @@ def Inicio(page=1):
      #Esto es para poder paginar la pagina mostar mas paginas y que no todo este desosrdenado con producto.query.paginate adentro de indicamos las paginas o valor de donde va empezar el paginado
      #el 5 es numero de elementos que se va mostrar en la parte de frente enviamos los items osea todo los elemnteos producto.items
     return  render_template('productos/index.html',productos=Productos.query.paginate(page,5))#lo mandamos ala plantilla html
+#el defaults es para poner un paremtro por default no hay mucho que decir se pone en un objeto para indicar lo paremtros por defecto
+@producto.route('/detalle-producto2',defaults={'id':1})
+@producto.route('/detalle-producto2/<int:id>')#de ponemos el valor int  por que en defautl esta en string
+def Detalle2(id):
+    producto=Productos.query.get_or_404(id)#con query.get(id )obtenmos el valor de un elemento con get_or_404 indica que si no existe el elemento que me muestre la pagina 404
+
+    return render_template('productos/show.html',producto=producto)  
+
+
+
 
 @producto.route('/detalle-producto/<int:id>')#de ponemos el valor int  por que en defautl esta en string
 def Detalle(id):
     producto=Productos.query.get_or_404(id)#con query.get(id )obtenmos el valor de un elemento con get_or_404 indica que si no existe el elemento que me muestre la pagina 404
-   
+
     return render_template('productos/show.html',producto=producto)      
 
 @producto.route('/filtro')
@@ -55,7 +74,7 @@ def iva_filter(producto):#de pasamos en objeto odicionario pra hacer la validaci
 #Formulario
 @producto.route('/crear-producto',methods=['GET','POST'])
 def Crear():
-    formulario=FormularioProducto(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioProducto#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
     #obtemos todos los datos de categoria para hacer la relacion asi la otra tabla y mostrar en un componente
     #debemos obtener los valores de un lista de categoria para hacer uso de choices
     #los hacemos de esta manera seria como una funcion de flecha o un map que obtenermos los valores con un for y 
@@ -64,7 +83,23 @@ def Crear():
     formulario.categoria_id.choices=categoria
     
     if formulario.validate_on_submit():#Es par verficar si dio submit al boton o si es una peticion post
-        p=Productos(request.form['nombre'],request.form['precio'],request.form['categoria_id'])
+        p=Productos(request.form['nombre'],request.form['precio'],request.form['categoria_id'],request.form['archivo'])
+           #verificacion de archivo y guardalo de archivos 
+        print(p)
+        archivo=[p.archivo]#Guardamos el archivo en una variable
+        print(f'El archivo es {p.archivo}')
+         #si nos devuelve un true y el filename es para que nos de el nombre del archivo
+        if VerificacionExtensions(archivo):#verificamos la extension del archivo
+            #Es para seguridad que nos verifique que no sea malisioso
+            archivoVerificado=secure_filename(archivo)#seguro de que el archivo no tenga caracteres especiales
+            #guardamos el archivo en la carpeta de uploads utilizamos el os para el path y la configuracion que hicimos
+            #y al final nos pide el nombre del archivo por eso archivoVerificado
+            archivo.save(os.path.join(app.config['Subir_Archivos'],archivoVerificado))#guardamos el archivo en la carpeta
+            #lo guardamos en la base de datos solo el nombre
+            p.archivo=archivoVerificado
+            
+        
+        
         db.session.add(p)
         db.session.commit()
         flash('Producto creado con exito!!')
@@ -97,7 +132,7 @@ def Crear():
 @producto.route('/actualizar-producto/<int:id>',methods=['GET','POST'])
 def Actualizar(id):
     producto=Productos.query.get_or_404(id)
-    formulario=FormularioProducto(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioProducto#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
       #los hacemos de esta manera seria como una funcion de flecha o un map que obtenermos los valores con un for y 
     categoria=[ (c.id,c.nombre) for c in Categorias.query.all()]
             #Importante poner el choices al momento de la relacion si no marca un error
@@ -114,6 +149,19 @@ def Actualizar(id):
          producto.nombre=formulario.nombre.data#se puede obteneer el valor directamente ya que usarmo el wtform 
          producto.precio=formulario.precio.data
          producto.categoria_id=formulario.categoria_id.data
+         
+         #verificacion de archivo y guardalo de archivos 
+         archivo=formulario.archivo.data#Guardamos el archivo en una variable 
+         #si nos devuelve un true y el filename es para que nos de el nombre del archivo
+         if VerificacionExtensions(archivo.filename):#verificamos la extension del archivo
+            #Es para seguridad que nos verifique que no sea malisioso
+            archivoVerificado=secure_filename(archivo.filename)#seguro de que el archivo no tenga caracteres especiales
+            #guardamos el archivo en la carpeta de uploads utilizamos el os para el path y la configuracion que hicimos
+            #y al final nos pide el nombre del archivo por eso archivoVerificado
+            archivo.save(os.path.join(app.config['Subir_Archivos'],archivoVerificado))#guardamos el archivo en la carpeta
+            #lo guardamos en la base de datos solo el nombre
+            producto.archivo=archivoVerificado
+            
          db.session.add(producto)
          db.session.commit()
          flash("Registro Actualizado con Exito")

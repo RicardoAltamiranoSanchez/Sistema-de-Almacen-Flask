@@ -16,7 +16,8 @@ import enum
 #Creamos una clase para pode usar los enum y hacer los roles para crear las columnas
 class rolUsuario(enum.Enum):
     regular=1
-    Adminstrador=5
+    adminstrador=2
+    
 
 
 class Usuarios(db.Model):
