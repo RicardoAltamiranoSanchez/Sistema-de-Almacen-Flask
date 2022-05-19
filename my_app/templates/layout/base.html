@@ -1,3 +1,4 @@
+<!--  extends "bootstrap/base.html"  esto es para habilitar el boostrap -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,18 +18,9 @@
 <body>
     <!--documentacion de templates o bloques para la base https://jinja.palletsprojects.com/en/2.10.x/templates/-->
   {% include "layout/_navegacion.html" %}
+   {% include "layout/_alertas.html" %}
 
 
-<!--para mostrar los mensajes de flash un codigo solo nos importa aqui el get_flashed_messages los dema es codigo para mostrarlo en la vista-->
-{%with mensajes=get_flashed_messages()%}
-{% if mensajes %}
-<ul class=flashes>
-{% for m in mensajes %}
-<li>{{m}}</li>
-{%endfor%}
-</ul>
-{%endif%}
-{%endwith%}
 <!--hacemos el html base ya que todos los demas lo van a heredar muy bien papu y añadimos un bloque donde pondremos el contenido que van a usar las demas platillas-->
 {%block contenido%}
 {%endblock%}    

@@ -13,12 +13,13 @@ Fusuario=Blueprint('Fusuario',__name__)#pasamos el nombre de la aplicacion en el
 @login_manager.user_loader
 def load_user(user_id):
     return Usuarios.query.get(user_id)
+    
 
-
+   
 #Formulario
 @Fusuario.route('/RegistroUsuario',methods=['GET','POST'])
 def RegistroUsuario():
-    formulario=FormularioRegistro(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioRegistro()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
     
     if formulario.validate_on_submit():#Es par verficar si dio submit al boton o si es una peticion post
        #hacemos un apeticion de usuario si existe y con query .filter_by pedimos la verificacion con parametros o campors
@@ -47,7 +48,7 @@ def Login():
             flash('El usuario ya esta autenticado ')
             return redirect(url_for('producto.Inicio'))
             
-    formulario=FormularioLogin(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioLogin()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
     
     if formulario.validate_on_submit():#Es par verficar si dio submit al boton o si es una peticion post
        #hacemos un apeticion de usuario si existe y con query .filter_by pedimos la verificacion con parametros o campors

@@ -13,6 +13,11 @@
 <!--include es diferente a extendes include incñuye el codigo que tenemos ahi como un bloque de codigo-->
 
 <input  class="btn btn-success" type="submit" value="Enviar"> 
+<!-- para que nos cree el token y tenga seguridad desativasmos el meta=csrf productos -->
+<!-- lo puse asi por que no me agarro el form creo que se debe hace con el form en la plantilla base form.csrf_token -->
+<!-- debe ponerse el nombre como de diste ala clase en models me marcaba error por eso y solo se usa en los post -->
+{{formulario.csrf_token}}
+
 
 </form>
 </div>

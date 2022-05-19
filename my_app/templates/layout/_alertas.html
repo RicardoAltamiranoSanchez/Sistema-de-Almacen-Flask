@@ -1,0 +1,37 @@
+<!--para mostrar los mensajes de flash un codigo solo nos importa aqui el get_flashed_messages los dema es codigo para mostrarlo en la vista-->
+<!-- width_categories es para decir que tipo de categorio o si viene una   -->
+{%with mensajes=get_flashed_messages(with_categories=true)%}
+{% if mensajes %}
+<!-- el category es para saber que tipo de mensaje es y lo iteramos igual -->
+<!-- en el div de alert hacemos un if para que que tipo de categoria es y ahi ponemos que tipo de color va esta o alert sin tener que mandar el tipo en flash -->
+{% for category, m in mensajes %}
+{%if category == 'formulario-error'%}
+   {% for key, list in message%}
+           
+             <div class="alert alert-danger fade show mt-3"/>
+             
+             {{key}}:{{list | join ("-")}}
+             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+             </div>
+      {%endfor%}
+             {%else%}
+            <div class="alert 
+            {%if category == 'message' %}
+            alert-success
+            {%else%}
+            alert-{{category}}
+            
+            {% endif%}
+            fade show mt-3">
+            
+            {{m | join ("[]")}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </div>
+            
+   {%endif%}
+{%endfor%}
+{%endif%}
+
+{%endwith%}

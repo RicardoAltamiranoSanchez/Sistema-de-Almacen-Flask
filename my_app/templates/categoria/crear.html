@@ -11,7 +11,8 @@
 <!--include es diferente a extendes include incñuye el codigo que tenemos ahi como un bloque de codigo-->
 
 <input  class="btn btn-success" type="submit" value="Enviar"> 
-
+<!-- para que nos cree el token y tenga seguridad desativasmos el meta=csrf productos -->
+{{formulario.csrf_token}}
 </form>
 <!--
 <label for="nombre" >Nombre</label>

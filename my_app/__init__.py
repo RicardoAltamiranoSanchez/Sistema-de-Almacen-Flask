@@ -5,6 +5,9 @@ from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,current_user,logout_user
 # para usar los decoradores y crear nuestro propios decoradores  es propio de python
 from functools import wraps
+#importamos el boostrap la implementamos
+from flask_bootstrap import Bootstrap
+from flask_mail import Mail #importamoe Mail para inicializarlo 
 import os #Es para utilizar los paths en python 
 #utilizamos el blueprint 
 #primero hacemos la configuracion de la base de datos para que no halla conflicto despues
@@ -15,6 +18,10 @@ app=Flask(__name__)
 #Es para el toke de seguridad se inserta el token en los formularios que estes utilizando
 #se genera el token con la llave secreta que tenemos en la configuracion.py
 CSRFProtect(app)
+#incializamos el boostrap para usarlo solo ponemos el extens en la plantilla principal o donde 
+#lo vallamos a usar {% extends "bootstrap/base.html" %}
+#Bootstrap(app)#importamos el Booostrap y lo inicializamos metiendo dentro la app
+
 #hacemos una lista para los tipos de archivos puedan subir
 #Set es uno de los 4 tipos de datos incorporados en Python utilizados para almacenar colecciones 
 #de datos, los otros 3 son List, Tuple y Dictionary, todos con diferentes calidades y uso.
@@ -23,6 +30,7 @@ Lista_Archivos=set(['png','jpg','jpeg','gif','pdf'])
 #el punto nos indica en que ruta estamos osea en el init__.py y lo contatenamos con la ruta de la carpeta
 #despues la importamos para utilizarla despues en una funcion productos
 app.config['Subir_Archivos']=os.path.realpath('.')+'/my_app/static/uploads/'
+mail = Mail(app)#Incializamos el mail o el flask-mail para usarlo despues y lo guardamos en una variable para usarlo despues
 
 #creamos el decorador antes de la vista 
 #Creamos un decorador para que solo el usuario adminstrador pueda entrar
@@ -75,6 +83,7 @@ app.register_blueprint(producto)
 app.register_blueprint(categoria)
 #app.register_blueprint(usuario)
 app.register_blueprint(Fusuario)
+
 #la ultimo mandamos a llamar y crear ala base de datos si no existe
 db.create_all()
 
@@ -83,3 +92,8 @@ def doble_filter(n:int):
     return n*2
 # documentacion para decoradores https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
 #documentacion para de csfr y proteccion en flask https://flask-wtf.readthedocs.io/en/v0.14.2/csrf/
+#documentacion para los mensajes flash https://flask.palletsprojects.com/en/1.1.x/patterns/flashing/
+#documentacion y instalacion de boostrap https://pythonhosted.org/Flask-Bootstrap/ y para el nuevo boostrap https://pypi.org/project/Flask-Bootstrap4/
+#boostrap https://pythonhosted.org/Flask-Bootstrap/basic-usage.html#templates
+#documentacion para usar el flask-mail https://pythonhosted.org/Flask-Mail/ pip install Flask-Mail
+#pagina para usar smtp para hacer pruebas de email https://mailtrap.io/

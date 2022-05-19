@@ -11,7 +11,11 @@ from my_app.DB.database import db
 from sqlalchemy.sql.expression import not_,or_ #importamos elnot y el or
 from my_app.models.modelCategoria.categoria import FormularioCategoria
 from flask_login import login_required
-from my_app import Rol_Admin
+from my_app import Rol_Admin,mail
+from flask_mail import Message
+
+from collections import namedtuple #importamos para crear una tupla de collections
+
 categoria=Blueprint('categoria',__name__)#pasamos el nombre de la aplicacion en el __name__ el primer parametro es como lo vamos a importar como asiganrla el nombre a un variable
 
 #el before reques es para que haga primero esto antes que lo demas
@@ -27,6 +31,13 @@ def Construtor():
 @categoria.route('/categoria')
 @categoria.route('/categoria/<int:page>')
 def Inicio(page=1):
+    #para enviar el mensaje esto solo es una prueba para ver si funciona el recipients es para indicar a cual se lo vamos a enviar
+    #si envia pero el proxy de con la lap que trabajo no me deja XD 
+    msg=Message('Hola Flask!!..',recipients=['pruebaflask@gmail.com'])
+    #el body es elc cuerpo del mensaje
+    #importamos el mail que tenemos en el init y enviamos en mensaje en send(msg)
+    msg.body="Que pedo"
+    mail.send(msg)
      #categoria=Categorias.query.all()#obtemos todos los categoria y query espara hacer consultas en la base de datos
      #Esto es para poder paginar la pagina mostar mas paginas y que no todo este desosrdenado con categoria.query.paginate adentro de indicamos las paginas o valor de donde va empezar el paginado
      #el 5 es numero de elementos que se va mostrar en la parte de frente enviamos los items osea todo los elemnteos categoria.items
@@ -56,7 +67,7 @@ def iva_filter(categoria):#de pasamos en objeto odicionario pra hacer la validac
 #Formulario
 @categoria.route('/crear-categoria',methods=['GET','POST'])
 def Crear():
-    formulario=FormularioCategoria(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioCategoria()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
     if formulario.validate_on_submit():#Es par verficar si dio submit al boton o si es una peticion post
         p=Categorias(request.form['nombre'])
         db.session.add(p)
@@ -91,15 +102,32 @@ def Crear():
 @categoria.route('/actualizar-categoria/<int:id>',methods=['GET','POST'])
 def Actualizar(id):
     categoria=Categorias.query.get_or_404(id)
-    formulario=FormularioCategoria(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioCategoria()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
    #mandamos a llamar el productos es el nombre que definimos en categoira models  productos=db.relationship('Productos', backref='categoria',lazy='select')
     print(categoria.productos)
+    #creamos una tupla para crear el formulario dinamico y  de ponemos los valores que en el archivo de models del formulario
+    group=namedtuple('group',['postal','telefono','dirrecion'])
+    #creas tres tuplas con el id de group con datos llenados solo para realizar pruebas
+    g1=group('414','5534343434','cuactemoc')
+    g2=group('543','4465343465','nezahualcoyotl')
+    g3=group('512','4465343465','Coyoacan')
+    #nos creaamos un objeto con un vector no se si es una lista  para despues llamarlo en data del formulario
+    #donde esta el campo del mismo nombre 
+    telefonos={'telefonos':[g1,g2,g3]}
+    
+    formulario=FormularioCategoria(data=telefonos)
+    #para eliminar elementos de un formulario con delete
+    del formulario.formularioList
+    #pasamos datos del formulario a un objeto
+    c=Categoria(name ="Cate 1")
+    
     if request.method == 'GET': #para cada vez que entre el usuario pueda tomar el valor en los inputs del proudco y los muestre
         formulario.nombre.data=categoria.nombre#ponemos el valor del categoria del id en el input
-        
+        formulario.id_formulario.data=categoria.id #obtenemos el valor de id de la base de datos y lo igualamos al campo oculto para poder actualizar y hacer que la funcion no marque error
     if formulario.validate_on_submit():#Es par verficar si dio submit al boton o si es una peticion post
          categoria.nombre=formulario.nombre.data#se puede obteneer el valor directamente ya que usarmo el wtform 
-       
+         formulario.populate_obj(c)
+         print(c.nombre)
          db.session.add(categoria)
          db.session.commit()
          flash("Registro Actualizado con Exito")

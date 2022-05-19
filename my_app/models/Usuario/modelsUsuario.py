@@ -18,6 +18,7 @@ class rolUsuario(enum.Enum):
     regular=1
     adminstrador=2
     
+    
 
 
 class Usuarios(db.Model):

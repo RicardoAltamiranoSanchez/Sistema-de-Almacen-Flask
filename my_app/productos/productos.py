@@ -74,7 +74,7 @@ def iva_filter(producto):#de pasamos en objeto odicionario pra hacer la validaci
 #Formulario
 @producto.route('/crear-producto',methods=['GET','POST'])
 def Crear():
-    formulario=FormularioProducto#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioProducto()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
     #obtemos todos los datos de categoria para hacer la relacion asi la otra tabla y mostrar en un componente
     #debemos obtener los valores de un lista de categoria para hacer uso de choices
     #los hacemos de esta manera seria como una funcion de flecha o un map que obtenermos los valores con un for y 
@@ -132,7 +132,7 @@ def Crear():
 @producto.route('/actualizar-producto/<int:id>',methods=['GET','POST'])
 def Actualizar(id):
     producto=Productos.query.get_or_404(id)
-    formulario=FormularioProducto#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
+    formulario=FormularioProducto()#(meta={ 'csrf':False})#quitamos el token para poder hacer la peticion sin problema mas adelan lo pondremos el token sirve para protegernos de los ataques del exterior
       #los hacemos de esta manera seria como una funcion de flecha o un map que obtenermos los valores con un for y 
     categoria=[ (c.id,c.nombre) for c in Categorias.query.all()]
             #Importante poner el choices al momento de la relacion si no marca un error
@@ -167,7 +167,15 @@ def Actualizar(id):
          flash("Registro Actualizado con Exito")
          return redirect(url_for('producto.Inicio'))#con  redirect se usa el modulo y la funcion para redirigir a otra pagina
     if formulario.errors:
-        flash("No se puede Actualizar el Prodcuto",'danger')
+        print("***********************************")
+        print(formulario.errors.items())#Vemos los errores en forma de lista para poder iterados
+        print(formulario.errors)#vemoss lo errores si hay alguno
+        #flash("No se puede Actualizar el Prodcuto",'danger')
+        #de ponemos el formulario-error para indicar que es un error de formulario es un nombre que nosotros de ponemos
+        flash(formulario.errors.items(),'formulario-error')
+        #flash("No se puede Actualizar el Prodcuto",'danger')
+
+    
     return render_template('productos/editar.html',formulario=formulario,producto=producto)        
 
 
@@ -179,7 +187,6 @@ def Eliminar(id):
     db.session.commit()
     flash('Producto Elimnado con exito!!')
     return redirect(url_for('producto.Inicio'))
-    
           
 @producto.route('/test')
 def test():

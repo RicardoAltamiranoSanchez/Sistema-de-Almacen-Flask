@@ -2,4 +2,22 @@
 <!--ponemos parentesis para poner clases dentro delinput o etiqueta() lo hacemos como si fuera una funcion-->
 
 {{formulario.nombre.label}}{{formulario.nombre(class="form-control mb-3")}}
+<!-- usamos el recaptcha de google para no halla spam -->
+{{formulario.recaptcha}}
+<!-- campos del formulario heredado -->
 
+{{formulario.telefono.label}}{{formulario.telefono(class="form-control mb-3")}}
+{{formulario.postal.label}}{{formulario.postal(class="form-control mb-3")}}
+{{formulario.dirrecion.label}}{{formulario.dirrecion(class="form-control mb-3")}}
+
+<!-- la lista de formulario que creamos  -->
+{%if formulario.formularioList%}
+<!-- usamos el if y el formulario para ver si esta definido por que usamos el delete de borra elemenentos de un formulario -->
+{{formulario.formularioList.label}}{{formulario.formularioList(class="form-control mb-3")}}
+{%endif%}
+<!-- esta de los multiples componenetes dinamicos sobre los telefonos y la tupla solo itearmos para mostrarlo -->
+{%for i in formulario.telefonos %}
+  {{i}}
+  {%endfor%}
+<!-- tipo de dato escondido para hacer la actualizacion si tiene el mismo nombre  -->
+{{formulario.id_formulario}}

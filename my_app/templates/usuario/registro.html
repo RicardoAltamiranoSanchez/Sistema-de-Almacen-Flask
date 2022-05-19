@@ -7,13 +7,13 @@
 
   
 
-<form action="{{url_for('usuario.RegistroUsuario')}}" method='POST'>
+<form action="{{url_for('Fusuario.RegistroUsuario')}}" method='POST'>
 <!--usamos wtform para hacer el formjlario nombre es el nombre que de dimos label es la etiquetea sin ella es un input-->
 {% include 'layout/_formularioUsuario.html' %}
 <!--include es diferente a extendes include incñuye el codigo que tenemos ahi como un bloque de codigo-->
 
 <input  class="btn btn-success" type="submit" value="Enviar"> 
-
+{{form.csrf_token}}
 </form>
 
 
